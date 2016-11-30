@@ -1,7 +1,8 @@
-def produce_video(camera_position, bird_position = (14.15445,23.74561,4.82148),FPS = 24.0):
+def produce_video(camera_position, bird_position = (14.15445,23.74561,4.82148),type_bird,FPS = 24.0, colition,final_frame):
 	import bpy
 	import pickle
 	from math import * 
+	import numpy
 	def look_at(obj_camera, point):
 	    loc_camera = obj_camera.matrix_world.to_translation()
 	    direction = point - loc_camera
@@ -10,9 +11,17 @@ def produce_video(camera_position, bird_position = (14.15445,23.74561,4.82148),F
 	    # assume we're using euler rotation
 	    obj_camera.rotation_euler = rot_quat.to_euler()
 	    obj_camera.keyframe_insert(data_path ='Rotation',group="LocRot")
-	    
-	filepath = "/home/josue/Desktop/Blender_trial/Owl.blend"
-	group_name = "Owl"
+
+	if type_bird = 1:
+		filepath = "/home/josue/Desktop/Blender_trial/Owl.blend"
+		group_name = "Owl"
+	elif type_bird = 2:
+		filepath = "/home/josue/Desktop/Blender_trial/Guacamaya-2013fb24.blend"
+		group_name = "G-Guacamaya"
+	elif type_bird = 0:
+		fileparh = "/home/josue/Desktop/Blender_trial/Quetzal-2013mr07.blend"
+		group_name = "Quetzal"
+	
 	# append, set to true to keep the link to the original file
 	link = False 
 
@@ -26,7 +35,7 @@ def produce_video(camera_position, bird_position = (14.15445,23.74561,4.82148),F
 
 	# add the group instance to the scene
 	scene = bpy.context.scene
-	scene.frame_end = 115
+	scene.frame_end = final_frame
 	obj_camera = bpy.data.objects["Camera"]
 	for group in data_dst.groups:
 	    ob = bpy.data.objects.new(group.name, None)
@@ -39,15 +48,18 @@ def produce_video(camera_position, bird_position = (14.15445,23.74561,4.82148),F
 	#ob.select = True
 	    ob.select = True
 	    bpy.context.scene.frame_set(1)
-	    ob.scale = (0.6,0.6,0.6)
-	    ob.location = (14.15445,23.74561,4.82148)
+	    if type_bird = 1:
+	    	ob.scale = (0.4,0.4,0.4)
+	    ob.location = bird_position
 	    ob.keyframe_insert(data_path ='location',group="LocRot")
 
-	    bpy.context.scene.frame_set(115)
-
-	    ob.location = tuple(obj_camera.location)
+	    bpy.context.scene.frame_set(final_frame)
+	    if colition = 1:
+	    	ob.location = tuple(obj_camera.location)
+	    else:
+		ob.location = tuple(numpy.array(obj_camera.location)
 	    ob.keyframe_insert(data_path ='location',group='LocRot')	
-	    print("Hello")
+	    
 
 
 	ob.select = True
@@ -68,12 +80,12 @@ def produce_video(camera_position, bird_position = (14.15445,23.74561,4.82148),F
 	f = open('data.pkl','wb')
 	pickle.dump(distances,f,2)
 	f.close()
-
-	#bpy.data.scenes["Scene"].frame_end = 115
+	object_velocity = float(distances[0])/float((float(final_frame)/float(FPS)))
+	bpy.data.scenes["Scene"].frame_end = final_frame
 	bpy.data.scenes["Scene"].render.fps = FPS
-	#bpy.data.scenes["Scene"].render.image_settings.file_format = 'AVI_JPEG' 
-	#py.data.scenes["Scene"].render.filepath = '/home/josue/something.avi' 
-	#bpy.ops.render.render( animation=True ) 
+	bpy.data.scenes["Scene"].render.image_settings.file_format = 'AVI_JPEG' 
+	py.data.scenes["Scene"].render.filepath = '/home/josue/looming_stimuli_{}_{}_{}.avi'.format(type_bird,object_velocity,looming)
+	bpy.ops.render.render( animation=True ) 
 
 
 
