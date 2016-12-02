@@ -1,8 +1,11 @@
-def produce_video(camera_position, bird_position = (14.15445,23.74561,4.82148),type_bird,FPS = 24.0, colition,final_frame):
+def produce_video(camera_position, bird_position = (14.15445,23.74561,4.82148),FPS = 24.0,type_bird, colition,final_frame,L):
+
 	import bpy
 	import pickle
 	from math import * 
 	import numpy
+	import mathutils
+
 	def look_at(obj_camera, point):
 	    loc_camera = obj_camera.matrix_world.to_translation()
 	    direction = point - loc_camera
@@ -11,6 +14,14 @@ def produce_video(camera_position, bird_position = (14.15445,23.74561,4.82148),t
 	    # assume we're using euler rotation
 	    obj_camera.rotation_euler = rot_quat.to_euler()
 	    obj_camera.keyframe_insert(data_path ='Rotation',group="LocRot")
+	def get_finalposition(camera,L):
+		vec = mathutils.Vector((L*sin(pi*numpy.random.uniform(1),0.0,L*cos(pi*numpy.random.uniform(1)))))
+		inv = camera.matrix_world.copy()
+		inv.invert()
+		# vec aligned to local axis
+		vec_rot = vec * inv
+		camera_new_location = cube.location + vec_rot
+		return camera_new_location
 
 	if type_bird = 1:
 		filepath = "/home/josue/Desktop/Blender_trial/Owl.blend"
@@ -57,7 +68,7 @@ def produce_video(camera_position, bird_position = (14.15445,23.74561,4.82148),t
 	    if colition = 1:
 	    	ob.location = tuple(obj_camera.location)
 	    else:
-		ob.location = tuple(numpy.array(obj_camera.location)
+		ob.location = get_finalposition(obj_camera,L)
 	    ob.keyframe_insert(data_path ='location',group='LocRot')	
 	    
 
