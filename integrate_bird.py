@@ -27,7 +27,7 @@ def CreateBoundingBox(context):
 			    maxz = v_world[2]
 
     values = (((maxx-minx)/2.0) + ((maxz-minz)/2.0) + ((maxy-miny)/2.0))/6.0
-	return values
+    return values
 
 import bpy
 from mathutils import Vector
