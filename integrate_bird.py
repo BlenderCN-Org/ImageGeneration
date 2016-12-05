@@ -21,10 +21,10 @@ def CreateBoundingBox(context):
                 miny = v_world[1]
             if v_world[1] > maxy:
                 maxy = v_world[1]
-		    if v_world[2] < minz:
-		        minz = v_world[2]
-		    if v_world[2] > maxz:
-			    maxz = v_world[2]
+	    if v_world[2] < minz:
+		minz = v_world[2]
+            if v_world[2] > maxz:
+		maxz = v_world[2]
 
     values = (((maxx-minx)/2.0) + ((maxz-minz)/2.0) + ((maxy-miny)/2.0))/6.0
     return values
