@@ -129,7 +129,7 @@ def produce_video(camera_position,type_bird, colition,final_frame,L, bird_positi
 	obj_camera.select = True
 	distances = []
 
-	for fr in range(1, 115):
+	for fr in range(1, final_frame):
 		bpy.context.scene.frame_set(fr)
 		lst = []
 		for obj in bpy.context.selected_objects:  # iterate over the selection NOTE: two object should be selected
